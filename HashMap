@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class Solution {
+	public List<String> wordsAbbreviation(List<String> dict){
+		int len=dict.size();
+		int[] prefix=new int[len];
+		String[] res=new String[len];
+		for(int i=0;i<len;i++){
+			prefix[i]=1;
+			res[i]=makeAbbr(dict.get(i),1);
+		}
+		for(int i=0;i<len;i++){
+			while(true){
+				HashSet<Integer> set=new HashSet<>();
+				for(int j=i+1; j<len;j++){
+					if(res[j].equals(res[i]))
+						set.add(j);
+				}
+				if(set.isEmpty()) break;
+				set.add(i);
+				for(int k: set)
+					res[i]=makeAbbr(dict.get(k),++prefix[k]);
+		}
+		
+		return Arrays.asList(res);
+	}
+	private String makeAbbr(String s, int k){
+		if(k>=s.length()-2) return s;
+		StringBuilder sb=new StringBuilder();
+		sb.append(s.substring(0,k)).append(s.length()-1-k).append(s.charAt(s.length()-1));
+		return sb.toString();
+	}
+}
